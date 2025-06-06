@@ -1,6 +1,7 @@
 import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
 import { ReactRefreshRspackPlugin } from "@rspack/plugin-react-refresh";
+const path = require("path");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -10,6 +11,14 @@ const targets = ["last 2 versions", "> 0.2%", "not dead", "Firefox ESR"];
 export default defineConfig({
   entry: {
     main: "./src/main.tsx",
+  },
+  output: {
+    filename: "my-web-component.js",
+    path: path.resolve(__dirname, "dist"),
+    library: {
+      type: "iife", // immediately invoked for browsers
+    },
+    clean: true,
   },
   resolve: {
     extensions: ["...", ".ts", ".tsx", ".jsx"],
@@ -22,6 +31,7 @@ export default defineConfig({
       },
       {
         test: /\.(jsx?|tsx?)$/,
+        exclude: /node_modules/,
         use: [
           {
             loader: "builtin:swc-loader",
@@ -78,4 +88,5 @@ export default defineConfig({
   experiments: {
     css: true,
   },
+  mode: "development", // or "production" based on your needs,
 });
