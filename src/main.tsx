@@ -6,8 +6,8 @@ import reactToWebComponent from "react-to-webcomponent";
 
 const MyWebComponent = reactToWebComponent(App, React, ReactDOM);
 customElements.define("email-domain-management", MyWebComponent);
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+//   <React.StrictMode>
+//     <App />
+//   </React.StrictMode>
+// );

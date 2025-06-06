@@ -30,6 +30,10 @@ export default defineConfig({
         type: "asset",
       },
       {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
         test: /\.(jsx?|tsx?)$/,
         exclude: /node_modules/,
         use: [
@@ -78,15 +82,10 @@ export default defineConfig({
     }),
   ].filter(Boolean),
   optimization: {
-    minimizer: [
-      new rspack.SwcJsMinimizerRspackPlugin(),
-      new rspack.LightningCssMinimizerRspackPlugin({
-        minimizerOptions: { targets },
-      }),
-    ],
+    minimizer: [new rspack.SwcJsMinimizerRspackPlugin()],
   },
   experiments: {
-    css: true,
+    css: false, // Disable built-in CSS extraction
   },
   mode: "development", // or "production" based on your needs,
 });
