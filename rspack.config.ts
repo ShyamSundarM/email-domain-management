@@ -8,59 +8,74 @@ const isDev = process.env.NODE_ENV === "development";
 const targets = ["last 2 versions", "> 0.2%", "not dead", "Firefox ESR"];
 
 export default defineConfig({
-	entry: {
-		main: "./src/main.tsx"
-	},
-	resolve: {
-		extensions: ["...", ".ts", ".tsx", ".jsx"]
-	},
-	module: {
-		rules: [
-			{
-				test: /\.svg$/,
-				type: "asset"
-			},
-			{
-				test: /\.(jsx?|tsx?)$/,
-				use: [
-					{
-						loader: "builtin:swc-loader",
-						options: {
-							jsc: {
-								parser: {
-									syntax: "typescript",
-									tsx: true
-								},
-								transform: {
-									react: {
-										runtime: "automatic",
-										development: isDev,
-										refresh: isDev
-									}
-								}
-							},
-							env: { targets }
-						}
-					}
-				]
-			}
-		]
-	},
-	plugins: [
-		new rspack.HtmlRspackPlugin({
-			template: "./index.html"
-		}),
-		isDev ? new ReactRefreshRspackPlugin() : null
-	].filter(Boolean),
-	optimization: {
-		minimizer: [
-			new rspack.SwcJsMinimizerRspackPlugin(),
-			new rspack.LightningCssMinimizerRspackPlugin({
-				minimizerOptions: { targets }
-			})
-		]
-	},
-	experiments: {
-		css: true
-	}
+  entry: {
+    main: "./src/main.tsx",
+  },
+  resolve: {
+    extensions: ["...", ".ts", ".tsx", ".jsx"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.svg$/,
+        type: "asset",
+      },
+      {
+        test: /\.(jsx?|tsx?)$/,
+        use: [
+          {
+            loader: "builtin:swc-loader",
+            options: {
+              jsc: {
+                parser: {
+                  syntax: "typescript",
+                  tsx: true,
+                },
+                transform: {
+                  react: {
+                    runtime: "automatic",
+                    development: isDev,
+                    refresh: isDev,
+                  },
+                },
+              },
+              env: { targets },
+            },
+          },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new rspack.HtmlRspackPlugin({
+      template: "./index.html",
+    }),
+    isDev ? new ReactRefreshRspackPlugin() : null,
+    new rspack.container.ModuleFederationPlugin({
+      name: "remoteDesignSystem",
+      remotes: {
+        remoteDesignSystem:
+          "remoteDesignSystem@https://starling-ui-design-system.netlify.app/static/remoteEntry.js",
+      },
+      shared: {
+        react: { singleton: true, eager: true, requiredVersion: "^18.0.0" },
+        "react-dom": {
+          singleton: true,
+          eager: true,
+          requiredVersion: "^18.0.0",
+        },
+      },
+    }),
+  ].filter(Boolean),
+  optimization: {
+    minimizer: [
+      new rspack.SwcJsMinimizerRspackPlugin(),
+      new rspack.LightningCssMinimizerRspackPlugin({
+        minimizerOptions: { targets },
+      }),
+    ],
+  },
+  experiments: {
+    css: true,
+  },
 });
