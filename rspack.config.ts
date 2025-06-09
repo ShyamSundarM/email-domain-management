@@ -1,7 +1,7 @@
 import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
 import { ReactRefreshRspackPlugin } from "@rspack/plugin-react-refresh";
-const path = require("path");
+import path from "path";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -14,7 +14,7 @@ export default defineConfig({
   },
   output: {
     filename: "my-web-component.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(new URL(".", import.meta.url).pathname, "dist"),
     library: {
       type: "iife", // immediately invoked for browsers
     },
