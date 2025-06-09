@@ -2,11 +2,16 @@ import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
 import { ReactRefreshRspackPlugin } from "@rspack/plugin-react-refresh";
 import path from "path";
+import { fileURLToPath } from "url";
+import { dirname, resolve } from "path";
 
 const isDev = process.env.NODE_ENV === "development";
 
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ["last 2 versions", "> 0.2%", "not dead", "Firefox ESR"];
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig({
   entry: {
@@ -14,7 +19,7 @@ export default defineConfig({
   },
   output: {
     filename: "my-web-component.js",
-    path: path.resolve(new URL(".", import.meta.url).pathname, "dist"),
+    path: path.resolve(__dirname, "dist"),
     library: {
       type: "iife", // immediately invoked for browsers
     },
