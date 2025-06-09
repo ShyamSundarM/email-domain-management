@@ -1,17 +1,20 @@
 import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
 import { ReactRefreshRspackPlugin } from "@rspack/plugin-react-refresh";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
+const path = require("path");
+
+//NODE V24 changes
+//import path from "path";
+//import { fileURLToPath } from "url";
+//import { dirname, resolve } from "path";
 
 const isDev = process.env.NODE_ENV === "development";
 
-// Target browsers, see: https://github.com/browserslist/browserslist
+// Target browsers
 const targets = ["last 2 versions", "> 0.2%", "not dead", "Firefox ESR"];
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 export default defineConfig({
   entry: {
@@ -21,7 +24,7 @@ export default defineConfig({
     filename: "my-web-component.js",
     path: path.resolve(__dirname, "dist"),
     library: {
-      type: "iife", // immediately invoked for browsers
+      type: "iife",
     },
     clean: true,
   },
@@ -37,6 +40,10 @@ export default defineConfig({
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
         test: /\.(jsx?|tsx?)$/,
@@ -90,7 +97,7 @@ export default defineConfig({
     minimizer: [new rspack.SwcJsMinimizerRspackPlugin()],
   },
   experiments: {
-    css: false, // Disable built-in CSS extraction
+    css: false,
   },
-  mode: "development", // or "production" based on your needs,
+  mode: isDev ? "development" : "production",
 });
